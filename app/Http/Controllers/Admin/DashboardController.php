@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
-use Inertia\Inertia;
-use App\Models\Reservation;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class DashboardController extends Controller
 {

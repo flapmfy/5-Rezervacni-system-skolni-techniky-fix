@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,7 @@ class HandleInertiaRequests extends Middleware
         return array_merge($sharedProps, [
             'auth' => [
                 'user' => [
-                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'name' => $user->first_name.' '.$user->last_name,
                     'class' => $user->class,
                     'isAdmin' => $user->isAdmin(),
                 ],

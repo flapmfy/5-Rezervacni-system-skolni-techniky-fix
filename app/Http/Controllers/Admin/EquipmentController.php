@@ -40,48 +40,48 @@ class EquipmentController extends Controller
     }
 
     public function index(Request $request)
-{
-    $filters = $request->only(['kategorie', 'vyhledavani', 'zobrazit_smazane', 'od_popularnich']);
-    $trashedCount = Auth::user()->equipment()->onlyTrashed()->count();
+    {
+        $filters = $request->only(['kategorie', 'vyhledavani', 'zobrazit_smazane', 'od_popularnich']);
+        $trashedCount = Auth::user()->equipment()->onlyTrashed()->count();
 
-    $query = Auth::user()->equipment()
-        ->select(['id', 'slug', 'category_id', 'name', 'quantity', 'created_at', 'updated_at', 'deleted_at', 'image_path'])
-        ->with('category:id,name,slug')
-        ->withCount('reservations')
-        ->withCount([
-            'reservations as active_reservations_count' => function ($query) {
-                $query->where('status', 'schváleno');
-            },
-            'reservations as waiting_reservations_count' => function ($query) {
-                $query->where('status', 'neschváleno');
-            },
-        ]);
+        $query = Auth::user()->equipment()
+            ->select(['id', 'slug', 'category_id', 'name', 'quantity', 'created_at', 'updated_at', 'deleted_at', 'image_path'])
+            ->with('category:id,name,slug')
+            ->withCount('reservations')
+            ->withCount([
+                'reservations as active_reservations_count' => function ($query) {
+                    $query->where('status', 'schváleno');
+                },
+                'reservations as waiting_reservations_count' => function ($query) {
+                    $query->where('status', 'neschváleno');
+                },
+            ]);
 
-    if (! empty($filters['zobrazit_smazane'])) {
-        $query->onlyTrashed();
-    }
+        if (! empty($filters['zobrazit_smazane'])) {
+            $query->onlyTrashed();
+        }
 
-    if (! empty($filters['kategorie'])) {
-        $query->whereHas('category', fn ($q) => $q->where('slug', $filters['kategorie']));
-    }
+        if (! empty($filters['kategorie'])) {
+            $query->whereHas('category', fn ($q) => $q->where('slug', $filters['kategorie']));
+        }
 
-    if (! empty($filters['vyhledavani'])) {
-        $search = $filters['vyhledavani'];
-        $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")
-            ->orWhere('description', 'like', "%{$search}%")
-        );
-    }
+        if (! empty($filters['vyhledavani'])) {
+            $search = $filters['vyhledavani'];
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+            );
+        }
 
-    // Apply ordering based on the "od_popularnich" filter.
-    if (! empty($filters['od_popularnich']) && $filters['od_popularnich']) {
-        $query->orderBy('reservations_count', 'desc');
-    } else {
-        $query->orderBy('name', 'asc');
-    }
+        // Apply ordering based on the "od_popularnich" filter.
+        if (! empty($filters['od_popularnich']) && $filters['od_popularnich']) {
+            $query->orderBy('reservations_count', 'desc');
+        } else {
+            $query->orderBy('name', 'asc');
+        }
 
-    $equipment = $query
-        ->paginate(10)
-        ->withQueryString();
+        $equipment = $query
+            ->paginate(10)
+            ->withQueryString();
 
         $equipment->getCollection()->transform(function ($item) {
             $item->image_path = $item->image_path ? Storage::url($item->image_path) : null; // Přidání URL obrázku
@@ -89,14 +89,13 @@ class EquipmentController extends Controller
             return $item;
         });
 
-    return Inertia::render('Admin/Equipment/Index', [
-        'equipment' => $equipment,
-        'trashedCount' => $trashedCount,
-        'categories' => $this->getCategories(),
-        'filters' => $filters,
-    ]);
-}
-
+        return Inertia::render('Admin/Equipment/Index', [
+            'equipment' => $equipment,
+            'trashedCount' => $trashedCount,
+            'categories' => $this->getCategories(),
+            'filters' => $filters,
+        ]);
+    }
 
     public function create()
     {

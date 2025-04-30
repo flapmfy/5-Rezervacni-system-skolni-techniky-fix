@@ -17,7 +17,7 @@ class VerificationController extends Controller
     public function verify(EmailVerificationRequest $request)
     {
         $request->fulfill();
-        
+
         return to_route('login')
             ->with('flash', flash('success', 'Email byl úspěšně ověřen. Počkejte prosím na schválení administrátorem.'));
     }
@@ -25,11 +25,11 @@ class VerificationController extends Controller
     public function resend(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
-        
+
         return back()->with('flash', flash('success', 'Byl odeslán nový ověřovací email.'));
     }
 
-        public function awaitingApproval()
+    public function awaitingApproval()
     {
         return Inertia::render('Auth/AwaitingApproval');
     }

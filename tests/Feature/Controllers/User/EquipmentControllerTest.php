@@ -18,7 +18,7 @@ class EquipmentControllerTest extends TestCase
     {
         parent::setUp();
         $this->student = User::factory()->create([
-            'is_admin' => false
+            'is_admin' => false,
         ]);
     }
 
@@ -29,7 +29,7 @@ class EquipmentControllerTest extends TestCase
 
         $response = $this->actingAs($this->student)
             ->get(route('equipment.index'));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }
@@ -38,19 +38,19 @@ class EquipmentControllerTest extends TestCase
     public function student_can_filter_equipment_by_category()
     {
         $category = Category::factory()->create(['name' => 'TestCategory']);
-        
+
         Equipment::factory()->create([
             'category_id' => $category->id,
-            'name' => 'Test Equipment'
+            'name' => 'Test Equipment',
         ]);
-        
+
         Equipment::factory()->create([
-            'name' => 'Other Equipment'
+            'name' => 'Other Equipment',
         ]);
-        
+
         $response = $this->actingAs($this->student)
             ->get(route('equipment.index', ['kategorie' => $category->slug]));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }
@@ -60,12 +60,12 @@ class EquipmentControllerTest extends TestCase
     {
         $equipment = Equipment::factory()->create([
             'name' => 'Test Equipment',
-            'slug' => 'test-equipment'
+            'slug' => 'test-equipment',
         ]);
-        
+
         $response = $this->actingAs($this->student)
             ->get(route('equipment.show', $equipment->slug));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }

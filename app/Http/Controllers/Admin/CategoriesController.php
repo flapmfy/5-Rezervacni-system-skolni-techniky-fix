@@ -76,9 +76,9 @@ class CategoriesController extends Controller
             'category' => $category,
             'equipmentCount' => $equipmentCount,
             'userEquipment' => $userEquipment,
-            'createdBy' => $category->user->first_name . ' ' . $category->user->last_name,
+            'createdBy' => $category->user->first_name.' '.$category->user->last_name,
             'createdAt' => $category->created_at,
-            'updatedBy' => $user_updated ? $user_updated->first_name . ' ' . $user_updated->last_name : null,
+            'updatedBy' => $user_updated ? $user_updated->first_name.' '.$user_updated->last_name : null,
             'updatedAt' => $user_updated ? $category->updated_at : null,
         ]);
     }

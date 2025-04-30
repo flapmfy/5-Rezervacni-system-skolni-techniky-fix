@@ -64,7 +64,7 @@ class ReservationsController extends Controller
                         'trashed' => optional($reservation->equipment)->trashed() ?? false,
                     ],
                     'student' => [
-                        'name' => $user ? $user->first_name . ' ' . $user->last_name : 'neexistuje',
+                        'name' => $user ? $user->first_name.' '.$user->last_name : 'neexistuje',
                         'class' => $user ? $user->class : '',
                     ],
                     'start_date' => $reservation->start_date,
@@ -186,7 +186,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Waiting/Show', [
             'reservation' => $reservation,
             'student' => [
-                'name' => $reservationUser ? $reservationUser->first_name . ' ' . $reservationUser->last_name : 'Uživatel neexistuje',
+                'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->class : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
                 'past_reservations_managed' => $adminManagedPast,
@@ -229,7 +229,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Accepted/Show', [
             'reservation' => $reservation,
             'student' => [
-                'name' => $reservationUser ? $reservationUser->first_name . ' ' . $reservationUser->last_name : 'Uživatel neexistuje',
+                'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->class : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
@@ -271,7 +271,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Active/Show', [
             'reservation' => $reservation,
             'student' => [
-                'name' => $reservationUser ? $reservationUser->first_name . ' ' . $reservationUser->last_name : 'Uživatel neexistuje',
+                'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->class : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
@@ -313,7 +313,7 @@ class ReservationsController extends Controller
             'reservation' => $reservation,
             'reservation_issues' => checkReservationIssues($reservation),
             'student' => [
-                'name' => $reservationUser ? $reservationUser->first_name . ' ' . $reservationUser->last_name : 'Uživatel neexistuje',
+                'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->class : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
@@ -361,7 +361,7 @@ class ReservationsController extends Controller
     public function declineWaiting(Request $request)
     {
         $declineMessage = $request->message;
-        
+
         $reservation = Reservation::where('id', $request->id)
             ->where('status', 'neschváleno')
             ->firstOrFail();
@@ -431,7 +431,7 @@ class ReservationsController extends Controller
                     'end_date' => $reservation->end_date,
                     'status' => $reservation->status,
                     'equipment_name' => $reservation->equipment->name,
-                    'user_name' => $reservation->user->first_name . ' ' . $reservation->user->last_name,
+                    'user_name' => $reservation->user->first_name.' '.$reservation->user->last_name,
                     'user_class' => $reservation->user->class,
                 ];
             });

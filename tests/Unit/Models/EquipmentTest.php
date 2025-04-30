@@ -54,9 +54,9 @@ class EquipmentTest extends TestCase
     {
         $equipment = Equipment::factory()->create();
         $equipmentId = $equipment->id;
-        
+
         $equipment->delete();
-        
+
         $this->assertNull(Equipment::find($equipmentId));
         $this->assertNotNull(Equipment::withTrashed()->find($equipmentId));
     }

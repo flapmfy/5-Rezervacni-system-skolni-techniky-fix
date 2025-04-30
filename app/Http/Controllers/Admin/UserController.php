@@ -17,12 +17,12 @@ class UserController extends Controller
             ->whereNotNull('email_verified_at')
             ->latest();
 
-        if (!empty($filters['vyhledavani'])) {
+        if (! empty($filters['vyhledavani'])) {
             $query->where(function ($query) use ($filters) {
-                $query->where('username', 'like', '%' . $filters['vyhledavani'] . '%')
-                    ->orWhere('email', 'like', '%' . $filters['vyhledavani'] . '%')
-                    ->orWhere('first_name', 'like', '%' . $filters['vyhledavani'] . '%')
-                    ->orWhere('last_name', 'like', '%' . $filters['vyhledavani'] . '%');
+                $query->where('username', 'like', '%'.$filters['vyhledavani'].'%')
+                    ->orWhere('email', 'like', '%'.$filters['vyhledavani'].'%')
+                    ->orWhere('first_name', 'like', '%'.$filters['vyhledavani'].'%')
+                    ->orWhere('last_name', 'like', '%'.$filters['vyhledavani'].'%');
             });
         }
 
@@ -38,13 +38,13 @@ class UserController extends Controller
                 'created_at' => $user->created_at,
             ];
         });
-            
+
         return Inertia::render('Admin/Users/PendingUsers', [
             'pendingUsers' => $paginatedUsers,
             'filters' => $filters,
         ]);
     }
-    
+
     public function approve($id)
     {
         $user = User::findOrFail($id);
@@ -55,9 +55,9 @@ class UserController extends Controller
 
         $user->approved_at = now();
         $user->save();
-        
-        $user->notify(new AccountApproved());
-        
+
+        $user->notify(new AccountApproved);
+
         return back()->with('flash', flash('success', 'Uživatel byl úspěšně schválen.'));
     }
 
@@ -68,7 +68,7 @@ class UserController extends Controller
             return back()->with('flash', flash('error', 'Uživatel již byl schválen.'));
         }
         $user->delete();
-        
+
         return back()->with('flash', flash('success', 'Uživatelovi byl odepřen přístup.'));
     }
 }

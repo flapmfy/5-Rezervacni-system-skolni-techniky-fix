@@ -2,9 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\User;
 use App\Models\Equipment;
-use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +16,7 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create([
             'first_name' => null,
-            'last_name'  => null,
+            'last_name' => null,
         ]);
 
         $this->assertTrue($user->needsProfileCompletion());
@@ -28,7 +27,7 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create([
             'first_name' => 'John',
-            'last_name'  => 'Doe',
+            'last_name' => 'Doe',
         ]);
 
         $this->assertFalse($user->needsProfileCompletion());
@@ -39,7 +38,7 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create([
             'first_name' => 'John',
-            'last_name'  => 'Doe',
+            'last_name' => 'Doe',
         ]);
 
         // Vytvoříme vybavení vlastněné tímto uživatelem.
@@ -55,7 +54,7 @@ class UserTest extends TestCase
         $this->assertCount(1, $user->reservationsToManage);
         $this->assertEquals($reservation->id, $user->reservationsToManage->first()->id);
     }
-    
+
     /** @test */
     public function user_can_have_multiple_equipment()
     {

@@ -1,17 +1,18 @@
 <?php
-use App\Http\Controllers\User;
-use App\Http\Middleware\Guest;
+
 use App\Http\Controllers\Admin;
-use App\Http\Middleware\Student;
-use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\Authenticated;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Middleware\Admin as AdminMiddleware;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\User;
+use App\Http\Middleware\Admin as AdminMiddleware;
+use App\Http\Middleware\Authenticated;
 use App\Http\Middleware\EnsureAccountIsApproved;
 use App\Http\Middleware\EnsureEmailIsVerified;
+use App\Http\Middleware\Guest;
+use App\Http\Middleware\Student;
+use Illuminate\Support\Facades\Route;
 
 // ------------------------------ Nepřihlášení ------------------------------
 Route::middleware([Guest::class])->group(function () {
@@ -27,15 +28,15 @@ Route::middleware([Guest::class])->group(function () {
 // ------------------------------ Kdokokliv přihlášený ------------------------------
 Route::middleware([Authenticated::class])->group(function () {
     Route::get('/awaiting-approval', [VerificationController::class, 'awaitingApproval'])
-    ->name('awaiting-approval');
+        ->name('awaiting-approval');
 
-        Route::get('/email/overeni', [VerificationController::class, 'notice'])
+    Route::get('/email/overeni', [VerificationController::class, 'notice'])
         ->name('verification.notice');
-    
+
     Route::get('/email/overeni/{id}/{hash}', [VerificationController::class, 'verify'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
-    
+
     Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
         ->middleware(['throttle:6,1'])
         ->name('verification.send');
@@ -99,11 +100,11 @@ Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureA
     // ------------------------ Uživatelé ------------------------
     Route::get('/admin/uzivatele/cekajici', [App\Http\Controllers\Admin\UserController::class, 'usersPending'])
         ->name('admin.users.pending');
-    
+
     Route::post('/admin/uzivatele/{id}/schvalit', [App\Http\Controllers\Admin\UserController::class, 'approve'])
         ->name('admin.users.approve');
 
-        Route::post('/admin/uzivatele/{id}/odmitnout', [App\Http\Controllers\Admin\UserController::class, 'decline'])
+    Route::post('/admin/uzivatele/{id}/odmitnout', [App\Http\Controllers\Admin\UserController::class, 'decline'])
         ->name('admin.users.decline');
 
     // ------------------------ Rezervace ------------------------

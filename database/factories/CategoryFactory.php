@@ -14,10 +14,11 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->unique()->word;
+
         return [
-            'name'            => $name,
-            'slug'            => Str::slug($name),
-            'user_id'         => User::factory(),
+            'name' => $name,
+            'slug' => Str::slug($name),
+            'user_id' => User::factory(),
             'user_updated_id' => null,
         ];
     }

@@ -19,95 +19,95 @@ class EquipmentController extends Controller
     }
 
     public function index(Request $request)
-{
-    $filters = $request->only(['kategorie', 'vyhledavani', 'vyrobce', 'mistnost', 'dostupnost', 'razeni', 'pouze_novinky']);
-    $EQUIPMENT_PER_PAGE = 12;
-    $equipmentCount = Equipment::count();
+    {
+        $filters = $request->only(['kategorie', 'vyhledavani', 'vyrobce', 'mistnost', 'dostupnost', 'razeni', 'pouze_novinky']);
+        $EQUIPMENT_PER_PAGE = 12;
+        $equipmentCount = Equipment::count();
 
-    $query = Equipment::query()
-        ->select(['id', 'category_id', 'name', 'image_path', 'manufacturer', 'description', 'created_at', 'deleted_at', 'slug', 'room', 'quantity'])
-        ->with('category:id,name,slug');
+        $query = Equipment::query()
+            ->select(['id', 'category_id', 'name', 'image_path', 'manufacturer', 'description', 'created_at', 'deleted_at', 'slug', 'room', 'quantity'])
+            ->with('category:id,name,slug');
 
-    // Filtrování podle kategorie
-    if (!empty($filters['kategorie'])) {
-        $query->whereHas('category', fn ($q) => $q->where('slug', $filters['kategorie']));
-    }
-
-    // Filtrování podle textu (název nebo popis)
-    if (!empty($filters['vyhledavani'])) {
-        $search = $filters['vyhledavani'];
-        $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")
-            ->orWhere('description', 'like', "%{$search}%")
-        );
-    }
-
-    // Filtrování podle výrobce
-    if (!empty($filters['vyrobce'])) {
-        $query->where('manufacturer', $filters['vyrobce']);
-    }
-
-    // Filtrování podle místnosti
-    if (!empty($filters['mistnost'])) {
-        $query->where('room', $filters['mistnost']);
-    }
-
-    // Filtrování pouze novinky (posledních 7 dní)
-    if (isset($filters['pouze_novinky']) && $filters['pouze_novinky'] === 'true') {
-        $query->where('created_at', '>=', now()->subDays(7));
-    }
-
-    // Řazení
-    if (!empty($filters['razeni'])) {
-        switch ($filters['razeni']) {
-            case 'name_asc':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('name', 'desc');
-                break;
-            case 'date_desc':
-                $query->orderBy('created_at', 'desc');
-                break;
-            case 'date_asc':
-                $query->orderBy('created_at', 'asc');
-                break;
-            default:
-                $query->orderBy('name', 'asc');
+        // Filtrování podle kategorie
+        if (! empty($filters['kategorie'])) {
+            $query->whereHas('category', fn ($q) => $q->where('slug', $filters['kategorie']));
         }
-    } else {
-        // Výchozí řazení podle názvu
-        $query->orderBy('name', 'asc');
-    }
 
-    $equipment = $query
-        ->paginate($EQUIPMENT_PER_PAGE)
-        ->withQueryString();
+        // Filtrování podle textu (název nebo popis)
+        if (! empty($filters['vyhledavani'])) {
+            $search = $filters['vyhledavani'];
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+            );
+        }
 
-    // Přidání dostupnosti a URL obrázku ke každému vybavení
-    $equipment->getCollection()->transform(function ($item) {
-        $item->availability = self::checkAvailability($item->id); // Přidání dostupnosti
-        $item->image_path = $item->image_path ? Storage::url($item->image_path) : null; // Přidání URL obrázku
+        // Filtrování podle výrobce
+        if (! empty($filters['vyrobce'])) {
+            $query->where('manufacturer', $filters['vyrobce']);
+        }
 
-        // Filtrování podle dostupnosti - provádíme to po načtení dat, protože dostupnost je vypočítaná hodnota
-        if (request()->has('dostupnost') && request()->input('dostupnost') != '') {
-            if ($item->availability != (int)request()->input('dostupnost')) {
-                return null;
+        // Filtrování podle místnosti
+        if (! empty($filters['mistnost'])) {
+            $query->where('room', $filters['mistnost']);
+        }
+
+        // Filtrování pouze novinky (posledních 7 dní)
+        if (isset($filters['pouze_novinky']) && $filters['pouze_novinky'] === 'true') {
+            $query->where('created_at', '>=', now()->subDays(7));
+        }
+
+        // Řazení
+        if (! empty($filters['razeni'])) {
+            switch ($filters['razeni']) {
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'date_desc':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'date_asc':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                default:
+                    $query->orderBy('name', 'asc');
             }
+        } else {
+            // Výchozí řazení podle názvu
+            $query->orderBy('name', 'asc');
         }
 
-        return $item;
-    });
+        $equipment = $query
+            ->paginate($EQUIPMENT_PER_PAGE)
+            ->withQueryString();
 
-    // Odstraníme případné null hodnoty z kolekce (po filtrování dostupnosti)
-    $equipment->setCollection($equipment->getCollection()->filter()->values());
+        // Přidání dostupnosti a URL obrázku ke každému vybavení
+        $equipment->getCollection()->transform(function ($item) {
+            $item->availability = self::checkAvailability($item->id); // Přidání dostupnosti
+            $item->image_path = $item->image_path ? Storage::url($item->image_path) : null; // Přidání URL obrázku
 
-    return Inertia::render('Student/Catalog/Index', [
-        'categories' => $this->getCategories(),
-        'filters' => $filters,
-        'equipment' => Inertia::defer(fn () => $equipment)->merge(),
-        'equipmentCount' => $equipmentCount < $EQUIPMENT_PER_PAGE ? $equipmentCount : $EQUIPMENT_PER_PAGE,
-    ]);
-}
+            // Filtrování podle dostupnosti - provádíme to po načtení dat, protože dostupnost je vypočítaná hodnota
+            if (request()->has('dostupnost') && request()->input('dostupnost') != '') {
+                if ($item->availability != (int) request()->input('dostupnost')) {
+                    return null;
+                }
+            }
+
+            return $item;
+        });
+
+        // Odstraníme případné null hodnoty z kolekce (po filtrování dostupnosti)
+        $equipment->setCollection($equipment->getCollection()->filter()->values());
+
+        return Inertia::render('Student/Catalog/Index', [
+            'categories' => $this->getCategories(),
+            'filters' => $filters,
+            'equipment' => Inertia::defer(fn () => $equipment)->merge(),
+            'equipmentCount' => $equipmentCount < $EQUIPMENT_PER_PAGE ? $equipmentCount : $EQUIPMENT_PER_PAGE,
+        ]);
+    }
 
     public function show($slug)
     {
@@ -120,7 +120,7 @@ class EquipmentController extends Controller
         $equipmentReservations = $equipment->reservations->where('status', '!=', 'archivováno')
             ->map(fn ($reservation) => [
                 'id' => $reservation->id,
-                'user_name' => $reservation->user->first_name . ' ' . $reservation->user->last_name,
+                'user_name' => $reservation->user->first_name.' '.$reservation->user->last_name,
                 'status' => $reservation->status,
                 'user_comment' => $reservation->user_comment,
                 'start_date' => $reservation->start_date,
@@ -130,11 +130,11 @@ class EquipmentController extends Controller
         return Inertia::render('Student/Catalog/Show', [
             'equipment' => array_merge($equipment->toArray(), [
                 'image_path' => $equipment->image_path ? Storage::url($equipment->image_path) : null,
-                'owner' => $equipment->owner->first_name . ' ' . $equipment->owner->last_name,
+                'owner' => $equipment->owner->first_name.' '.$equipment->owner->last_name,
             ]),
             'category' => $equipment->category,
             'bookedRanges' => $equipmentReservations,
-            'disabledDays' => $disabledDays
+            'disabledDays' => $disabledDays,
         ]);
     }
 

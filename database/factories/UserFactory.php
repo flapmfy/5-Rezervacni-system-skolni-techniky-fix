@@ -12,14 +12,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'first_name'    => $this->faker->firstName,
-            'last_name'     => $this->faker->lastName,
-            'username'      => $this->faker->unique()->userName,
-            'email'         => $this->faker->unique()->safeEmail,
-            'password'      => bcrypt('password'),
-            'class'         => $this->faker->word,
-            'is_admin'      => $this->faker->boolean,
-            'default_room'  => $this->faker->word,
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'username' => $this->faker->unique()->userName,
+            'email' => $this->faker->unique()->safeEmail,
+            'password' => bcrypt('password'),
+            'class' => $this->faker->word,
+            'is_admin' => $this->faker->boolean,
+            'default_room' => $this->faker->word,
             'disabled_days' => null,
         ];
     }

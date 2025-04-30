@@ -14,23 +14,25 @@ class ReservationsAdvancedTest extends TestCase
     use RefreshDatabase;
 
     private User $student;
+
     private User $admin;
+
     private Equipment $equipment;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->student = User::factory()->create([
-            'is_admin' => false
+            'is_admin' => false,
         ]);
-        
+
         $this->admin = User::factory()->create([
-            'is_admin' => true
+            'is_admin' => true,
         ]);
-        
+
         $this->equipment = Equipment::factory()->create([
             'user_id' => $this->admin->id,
-            'quantity' => 2
+            'quantity' => 2,
         ]);
     }
 
@@ -40,23 +42,23 @@ class ReservationsAdvancedTest extends TestCase
         // Use tomorrow as start date and day after as end date to clearly meet validation
         $yesterday = Carbon::yesterday()->format('Y-m-d');
         $today = Carbon::today()->format('Y-m-d');
-        
+
         $response = $this->actingAs($this->student)
             ->post(route('user.reservations.store'), [
                 'equipmentId' => $this->equipment->id,
                 'startDate' => $yesterday,
                 'endDate' => $today,
-                'comment' => 'Past reservation attempt'
+                'comment' => 'Past reservation attempt',
             ]);
-        
+
         // This should fail validation
         $response->assertRedirect();
-        
+
         // The database should not contain this reservation
         $this->assertDatabaseMissing('reservations', [
             'equipment_id' => $this->equipment->id,
             'user_id' => $this->student->id,
-            'start_date' => $yesterday
+            'start_date' => $yesterday,
         ]);
     }
 
@@ -66,12 +68,12 @@ class ReservationsAdvancedTest extends TestCase
         Reservation::factory()->create([
             'equipment_id' => $this->equipment->id,
             'user_id' => $this->student->id,
-            'status' => 'schváleno'
+            'status' => 'schváleno',
         ]);
-        
+
         $response = $this->actingAs($this->student)
             ->get(route('user.reservations.accepted'));
-        
+
         $response->assertSuccessful();
     }
 
@@ -81,12 +83,12 @@ class ReservationsAdvancedTest extends TestCase
         Reservation::factory()->create([
             'equipment_id' => $this->equipment->id,
             'user_id' => $this->student->id,
-            'status' => 'neschváleno'
+            'status' => 'neschváleno',
         ]);
-        
+
         $response = $this->actingAs($this->student)
             ->get(route('user.reservations.waiting'));
-        
+
         $response->assertSuccessful();
     }
 
@@ -96,12 +98,12 @@ class ReservationsAdvancedTest extends TestCase
         Reservation::factory()->create([
             'equipment_id' => $this->equipment->id,
             'user_id' => $this->student->id,
-            'status' => 'archivováno'
+            'status' => 'archivováno',
         ]);
-        
+
         $response = $this->actingAs($this->student)
             ->get(route('user.reservations.archived'));
-        
+
         $response->assertSuccessful();
     }
 }

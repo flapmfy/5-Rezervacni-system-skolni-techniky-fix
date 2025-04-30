@@ -16,7 +16,7 @@ class ActionsControllerTest extends TestCase
     {
         parent::setUp();
         $this->admin = User::factory()->create([
-            'is_admin' => true
+            'is_admin' => true,
         ]);
     }
 
@@ -25,7 +25,7 @@ class ActionsControllerTest extends TestCase
     {
         $response = $this->actingAs($this->admin)
             ->get(route('admin.actions'));
-        
+
         $response->assertSuccessful();
     }
 }

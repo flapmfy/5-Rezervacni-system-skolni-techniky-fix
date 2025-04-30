@@ -35,7 +35,7 @@ class LoginController extends Controller
         // Attempt login
         if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
             $user = Auth::user();
-            
+
             RateLimiter::clear($key); // Clear rate limit on successful login
             $request->session()->regenerate();
 

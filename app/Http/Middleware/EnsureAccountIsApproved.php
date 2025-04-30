@@ -10,7 +10,7 @@ class EnsureAccountIsApproved
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || $request->user()->approved_at === null) {
+        if (! $request->user() || $request->user()->approved_at === null) {
             return $request->expectsJson()
                 ? abort(403, 'Účet není schválen.')
                 : Redirect::route('awaiting-approval')

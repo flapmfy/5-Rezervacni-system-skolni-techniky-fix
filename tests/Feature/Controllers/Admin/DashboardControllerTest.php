@@ -19,7 +19,7 @@ class DashboardControllerTest extends TestCase
     {
         parent::setUp();
         $this->admin = User::factory()->create([
-            'is_admin' => true
+            'is_admin' => true,
         ]);
     }
 
@@ -28,7 +28,7 @@ class DashboardControllerTest extends TestCase
     {
         $response = $this->actingAs($this->admin)
             ->get(route('admin.dashboard'));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }
@@ -38,18 +38,18 @@ class DashboardControllerTest extends TestCase
     {
         // Create equipment owned by admin
         $equipment = Equipment::factory()->create([
-            'user_id' => $this->admin->id
+            'user_id' => $this->admin->id,
         ]);
-        
+
         // Create reservation today
         Reservation::factory()->create([
             'equipment_id' => $equipment->id,
-            'created_at' => Carbon::today()
+            'created_at' => Carbon::today(),
         ]);
-        
+
         $response = $this->actingAs($this->admin)
             ->get(route('admin.dashboard', ['days' => 2]));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }

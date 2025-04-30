@@ -37,7 +37,7 @@ class ReservationsController extends Controller
                         'image' => $equipment->image_path ? Storage::url($equipment->image_path) : null,
                         'room' => $equipment->room,
                         'slug' => $equipment->slug,
-                        'admin' => $equipment->owner->first_name . ' ' . $equipment->owner->last_name,
+                        'admin' => $equipment->owner->first_name.' '.$equipment->owner->last_name,
                         'trashed' => $equipment->trashed(),
                     ] : null,
                     'start_date' => $reservation->start_date,
@@ -72,9 +72,9 @@ class ReservationsController extends Controller
                         'name' => $equipment->name,
                         'room' => $equipment->room,
                         'slug' => $equipment->slug,
-                        'admin' => $equipment->owner->first_name . ' ' . $equipment->owner->last_name,
+                        'admin' => $equipment->owner->first_name.' '.$equipment->owner->last_name,
                         'trashed' => $equipment->trashed(),
-                    'image_path' => $reservation->equipment->image_path ? Storage::url($reservation->equipment->image_path) : null,
+                        'image_path' => $reservation->equipment->image_path ? Storage::url($reservation->equipment->image_path) : null,
 
                     ] : null,
                     'start_date' => $reservation->start_date,
@@ -98,7 +98,7 @@ class ReservationsController extends Controller
                 'equipment' => [
                     'id' => $reservation->equipment->id,
                     'name' => $reservation->equipment->name,
-                    'admin' => $reservation->equipment->owner->first_name . ' ' . $reservation->equipment->owner->last_name,
+                    'admin' => $reservation->equipment->owner->first_name.' '.$reservation->equipment->owner->last_name,
                     'slug' => $reservation->equipment->slug,
                     'room' => $reservation->equipment->room,
                     'image_path' => $reservation->equipment->image_path ? Storage::url($reservation->equipment->image_path) : null,
@@ -135,7 +135,7 @@ class ReservationsController extends Controller
                         'slug' => $equipment->slug,
                         'image' => $equipment->image_path ? Storage::url($equipment->image_path) : null,
                     ] : null,
-                    'teacher' => $reservation->admin->first_name . ' ' . $reservation->admin->last_name,
+                    'teacher' => $reservation->admin->first_name.' '.$reservation->admin->last_name,
                     'comment' => $reservation->comment,
                     'start_date' => $reservation->start_date,
                     'end_date' => $reservation->end_date,
@@ -298,9 +298,10 @@ class ReservationsController extends Controller
         }
 
         if ($reservation->status === 'schváleno' && $reservation->start_date < now()) {
-          $reservation->update([
+            $reservation->update([
                 'status' => 'archivováno',
             ]);
+
             return back()->with('flash', flash(
                 'warning',
                 'Rezervace byla zrušena a zaznamenána jako nevyzvednutá.'));

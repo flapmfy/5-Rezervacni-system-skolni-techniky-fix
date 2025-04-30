@@ -10,7 +10,7 @@ class EnsureEmailIsVerified
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || !$request->user()->hasVerifiedEmail()) {
+        if (! $request->user() || ! $request->user()->hasVerifiedEmail()) {
             return $request->expectsJson()
                 ? abort(403, 'Email není ověřen.')
                 : Redirect::route('verification.notice')

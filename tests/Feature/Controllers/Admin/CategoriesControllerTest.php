@@ -17,7 +17,7 @@ class CategoriesControllerTest extends TestCase
     {
         parent::setUp();
         $this->admin = User::factory()->create([
-            'is_admin' => true
+            'is_admin' => true,
         ]);
     }
 
@@ -28,7 +28,7 @@ class CategoriesControllerTest extends TestCase
 
         $response = $this->actingAs($this->admin)
             ->get(route('admin.categories.index'));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }
@@ -38,10 +38,10 @@ class CategoriesControllerTest extends TestCase
     {
         $category1 = Category::factory()->create(['name' => 'TestCategory']);
         Category::factory()->create(['name' => 'OtherCategory']);
-        
+
         $response = $this->actingAs($this->admin)
             ->get(route('admin.categories.index', ['vyhledavani' => 'Test']));
-        
+
         // Simple success check without Inertia assertions
         $response->assertSuccessful();
     }
@@ -50,20 +50,20 @@ class CategoriesControllerTest extends TestCase
     public function admin_cannot_delete_category_with_equipment()
     {
         $category = Category::factory()->create();
-        
+
         // Create equipment for this category
         $equipment = \App\Models\Equipment::factory()->create([
-            'category_id' => $category->id
+            'category_id' => $category->id,
         ]);
-        
+
         $response = $this->actingAs($this->admin)
             ->delete(route('admin.categories.delete', $category->id));
-        
+
         $response->assertRedirect();
         // $response->assertSessionHas('flash'); // Removed this line
-        
+
         $this->assertDatabaseHas('categories', [
-            'id' => $category->id
+            'id' => $category->id,
         ]);
     }
 }

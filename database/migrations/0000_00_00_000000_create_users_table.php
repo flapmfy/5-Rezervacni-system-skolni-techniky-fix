@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('class')->nullable();
             $table->string('role')->default('student');
             $table->string('default_room')->nullable();
             $table->string('disabled_days')->nullable();

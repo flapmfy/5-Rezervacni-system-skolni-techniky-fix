@@ -97,11 +97,14 @@ Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureA
     )->name('admin.manual');
 
     // ------------------------ Uživatelé ------------------------
-    Route::get('/admin/uzivatele/cekajici', [App\Http\Controllers\Admin\UserController::class, 'index'])
+    Route::get('/admin/uzivatele/cekajici', [App\Http\Controllers\Admin\UserController::class, 'usersPending'])
         ->name('admin.users.pending');
     
-    Route::post('/admin/uzivatele/{user}/schvalit', [App\Http\Controllers\Admin\UserController::class, 'approve'])
+    Route::post('/admin/uzivatele/{id}/schvalit', [App\Http\Controllers\Admin\UserController::class, 'approve'])
         ->name('admin.users.approve');
+
+        Route::post('/admin/uzivatele/{id}/odmitnout', [App\Http\Controllers\Admin\UserController::class, 'decline'])
+        ->name('admin.users.decline');
 
     // ------------------------ Rezervace ------------------------
     // --- Neschválené žádosti --- //

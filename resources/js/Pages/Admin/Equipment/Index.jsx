@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import { useRoute } from 'ziggy-js';
 import { debounce } from 'lodash';
-import { Truncate } from '@re-dev/react-truncate';
 import { truncate } from 'lodash';
 import Pagination from '@/Components/Navigation/Pagination';
 import NoResults from '@/Components/Misc/NoResults';
@@ -24,7 +23,6 @@ function Index({ equipment, categories, filters, trashedCount }) {
   const [showDeleted, setShowDeleted] = useState(filters.zobrazit_smazane || false);
   const [sortByPopularity, setSortByPopularity] = useState(filters.od_popularnich || false);
   const [equipmentToDelete, setEquipmentToDelete] = useState(null);
-  console.log(filters);
 
   // funkce ktera provede vyhledani
   const updateFilters = (newFilters) => {

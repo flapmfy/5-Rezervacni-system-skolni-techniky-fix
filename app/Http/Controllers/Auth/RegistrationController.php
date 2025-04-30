@@ -53,11 +53,8 @@ class RegistrationController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'role' => $request->role,
+            'default_room' => $request->default_room,
         ];
-        
-        if ($request->role === 'admin') {
-            $userData['default_room'] = $request->default_room;
-        }
 
         $user = User::create($userData);
 

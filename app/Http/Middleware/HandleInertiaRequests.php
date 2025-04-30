@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -50,12 +50,17 @@ class HandleInertiaRequests extends Middleware
         $acceptedReservationsCount = null;
         $activeReservationsCount = null;
         $archivedReservationsCount = null;
+        $pendingUsersCount = null;
 
         if ($user->isAdmin()) {
             $waitingReservationsCount = $user->reservationsToManage->where('status', 'neschváleno')->count();
             $acceptedReservationsCount = $user->reservationsToManage->where('status', 'schváleno')->count();
             $activeReservationsCount = $user->reservationsToManage->where('status', 'probíhá')->count();
             $archivedReservationsCount = $user->reservationsToManage->where('status', 'archivováno')->count();
+            $pendingUsersCount = User::whereNull('approved_at')
+                ->whereNotNull('email_verified_at')
+                ->latest()
+                ->count();
         }
 
         if (! $user->isAdmin()) {
@@ -77,6 +82,7 @@ class HandleInertiaRequests extends Middleware
             'acceptedReservationsCount' => $acceptedReservationsCount,
             'activeReservationsCount' => $activeReservationsCount,
             'archivedReservationsCount' => $archivedReservationsCount,
+            'pendingUsersCount' => $pendingUsersCount,
         ]);
     }
 }

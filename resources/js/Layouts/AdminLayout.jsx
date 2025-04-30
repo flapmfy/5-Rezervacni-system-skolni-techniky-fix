@@ -43,6 +43,7 @@ const AdminPanelLayout = ({ children }) => {
     waitingReservationsCount,
     archivedReservationsCount,
     activeReservationsCount,
+    pendingUsersCount,
     auth,
   } = usePage().props;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -98,6 +99,27 @@ const AdminPanelLayout = ({ children }) => {
         href: 'admin.reservations.archived',
         icon: ArchiveBoxIcon,
         id: 'historie-link',
+      },
+    ],
+    [
+      {
+        type: 'header',
+        label: 'Uživatelé',
+        id: 'uzivatele-header',
+      },
+      {
+        type: 'link',
+        label: <LabelWithCount label="Neschválení" count={pendingUsersCount} />,
+        href: 'admin.users.pending',
+        icon: ClockIcon,
+        id: 'uzivatele-pending-link',
+      },
+      {
+        type: 'link',
+        label: 'Přehled',
+        href: 'admin.users.pending',
+        icon: UserIcon,
+        id: 'users-link',
       },
     ],
     [

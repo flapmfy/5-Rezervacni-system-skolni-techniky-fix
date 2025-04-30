@@ -16,7 +16,7 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('heslo'),
             'first_name' => 'Zdeněk',
             'last_name' => 'Wachtl',
-            'class' => 'D30',
+            'default_room' => 'D30',
             'role' => 'admin',
             'email_verified_at' => now(),
             'approved_at' => now(),

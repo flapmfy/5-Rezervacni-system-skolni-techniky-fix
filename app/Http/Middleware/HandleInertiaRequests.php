@@ -51,14 +51,14 @@ class HandleInertiaRequests extends Middleware
         $activeReservationsCount = null;
         $archivedReservationsCount = null;
 
-        if ($user->is_admin) {
+        if ($user->isAdmin()) {
             $waitingReservationsCount = $user->reservationsToManage->where('status', 'neschváleno')->count();
             $acceptedReservationsCount = $user->reservationsToManage->where('status', 'schváleno')->count();
             $activeReservationsCount = $user->reservationsToManage->where('status', 'probíhá')->count();
             $archivedReservationsCount = $user->reservationsToManage->where('status', 'archivováno')->count();
         }
 
-        if (! $user->is_admin) {
+        if (! $user->isAdmin()) {
             $waitingReservationsCount = $user->reservations->where('status', 'neschváleno')->count();
             $acceptedReservationsCount = $user->reservations->where('status', 'schváleno')->count();
             $activeReservationsCount = $user->reservations->where('status', 'probíhá')->count();
@@ -70,7 +70,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => [
                     'name' => $user->first_name . ' ' . $user->last_name,
                     'class' => $user->class,
-                    'isAdmin' => $user->is_admin,
+                    'isAdmin' => $user->isAdmin(),
                 ],
             ],
             'waitingReservationsCount' => $waitingReservationsCount,

@@ -1,29 +1,50 @@
 <?php
-
 use App\Http\Controllers\User;
 use App\Http\Middleware\Guest;
 use App\Http\Controllers\Admin;
 use App\Http\Middleware\Student;
-use App\Http\Middleware\Teacher;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Authenticated;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Middleware\Admin as AdminMiddleware;
+use App\Http\Controllers\Auth\RegistrationController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Middleware\EnsureAccountIsApproved;
+use App\Http\Middleware\EnsureEmailIsVerified;
 
 // ------------------------------ Nepřihlášení ------------------------------
 Route::middleware([Guest::class])->group(function () {
     // Přihlašování
     Route::get('/prihlaseni', [LoginController::class, 'index'])->name('login');
     Route::post('/prihlaseni', [LoginController::class, 'login'])->name('login.post');
+
+    // Registrace
+    Route::get('/register', [RegistrationController::class, 'index'])->name('register');
+    Route::post('/register', [RegistrationController::class, 'register'])->name('register.post');
 });
 
 // ------------------------------ Kdokokliv přihlášený ------------------------------
 Route::middleware([Authenticated::class])->group(function () {
+    Route::get('/awaiting-approval', [VerificationController::class, 'awaitingApproval'])
+    ->name('awaiting-approval');
+
+        Route::get('/email/overeni', [VerificationController::class, 'notice'])
+        ->name('verification.notice');
+    
+    Route::get('/email/overeni/{id}/{hash}', [VerificationController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    
+    Route::post('/email/verification-notification', [VerificationController::class, 'resend'])
+        ->middleware(['throttle:6,1'])
+        ->name('verification.send');
     Route::get('/odhlaseni', [LoginController::class, 'logout'])->name('auth.logout');
+
 });
 
 // ------------------------------ Uživatelská část ------------------------------
-Route::middleware([Student::class])->group(function () {
+Route::middleware([Student::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class])->group(function () {
     // Domovská obrazovka uživatele
     Route::get('/', [User\ReservationsController::class, 'active'])->name('user.reservations.active');
 
@@ -53,7 +74,7 @@ Route::middleware([Student::class])->group(function () {
 });
 
 // ------------------------------ Administrátorská část ------------------------------
-Route::middleware([Teacher::class])->group(function () {
+Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class])->group(function () {
     // Domovská obrazovka admina
     Route::get('/admin', [Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -74,6 +95,13 @@ Route::middleware([Teacher::class])->group(function () {
         '/admin/navod-k-pouziti',
         'Admin/Manual',
     )->name('admin.manual');
+
+    // ------------------------ Uživatelé ------------------------
+    Route::get('/admin/uzivatele/cekajici', [App\Http\Controllers\Admin\UserController::class, 'index'])
+        ->name('admin.users.pending');
+    
+    Route::post('/admin/uzivatele/{user}/schvalit', [App\Http\Controllers\Admin\UserController::class, 'approve'])
+        ->name('admin.users.approve');
 
     // ------------------------ Rezervace ------------------------
     // --- Neschválené žádosti --- //

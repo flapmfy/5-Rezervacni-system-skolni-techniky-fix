@@ -20,7 +20,7 @@ class Guest
             return $next($request);
         }
 
-        if (Auth::user()->is_admin) {
+        if (Auth::user()->isAdmin()) {
             return to_route('admin.dashboard');
         } else {
             return to_route('user.reservations.active');

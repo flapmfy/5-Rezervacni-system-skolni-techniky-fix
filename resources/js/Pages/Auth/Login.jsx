@@ -20,27 +20,33 @@ const Login = () => {
       <Head title="Přihlášení" />
       <form
         onSubmit={submit}
-        className="drop-down w-full max-w-sm rounded-lg bg-white-50 p-6 shadow-md dark:bg-gray-800"
+        className="drop-down w-full max-w-[450px] rounded-lg bg-white-50 p-6 shadow-md dark:bg-gray-800"
       >
         <div className="mb-8 flex flex-col items-center gap-1 text-2xl font-bold text-gray-800 dark:text-gray-200">
           <Logo className="size-12" />
           <p>Přihlášení</p>
         </div>
 
-        <div>
-          <div className="relative mb-6">
+        <div className="flex flex-col gap-4">
+          <div className="relative">
             <input
               value={data.username}
               onChange={(e) => setData('username', e.target.value)}
               type="text"
               id="username"
-              className={`${errors.username ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} peer w-full border-b-2 bg-transparent py-2 text-gray-700 placeholder-transparent transition-all duration-300 focus:border-green-500 focus:outline-none dark:text-gray-300 dark:focus:border-green-400`}
+              className={`${
+                errors.username
+                  ? 'border-red-500'
+                  : 'border-gray-300 dark:border-gray-600'
+              } peer w-full border-b-2 bg-transparent py-2 text-gray-700 placeholder-transparent transition-all duration-300 focus:border-green-500 focus:outline-none dark:text-gray-300 dark:focus:border-green-400`}
               placeholder="Uživatelské jméno"
               autoComplete="username"
             />
 
             {errors.username && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-400">{errors.username}</p>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+                {errors.username}
+              </p>
             )}
 
             <UserIcon
@@ -56,19 +62,23 @@ const Login = () => {
             </label>
           </div>
 
-          <div className="relative mb-6">
+          <div className="relative mt-2">
             <input
               value={data.password}
               onChange={(e) => setData('password', e.target.value)}
               type="password"
               id="password"
-              className={`${errors.username ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} peer w-full border-b-2 bg-transparent py-2 text-gray-700 placeholder-transparent transition-all duration-300 focus:border-green-500 focus:outline-none dark:text-gray-300 dark:focus:border-green-400`}
+              className={`${
+                errors.username
+                  ? 'border-red-500'
+                  : 'border-gray-300 dark:border-gray-600'
+              } peer w-full border-b-2 bg-transparent py-2 text-gray-700 placeholder-transparent transition-all duration-300 focus:border-green-500 focus:outline-none dark:text-gray-300 dark:focus:border-green-400`}
               placeholder="Heslo"
               autoComplete="current-password"
             />
 
             {errors.password && (
-              <p className="peer/error mt-2 text-sm text-red-600 dark:text-red-400">
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">
                 {errors.password}
               </p>
             )}
@@ -90,10 +100,19 @@ const Login = () => {
         <button
           disabled={processing}
           type="submit"
-          className="focus:ring-white w-full rounded-lg bg-green-700 px-4 py-2 text-white-50 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-opacity-75"
+          className="mt-6 w-full rounded-lg bg-green-700 px-4 py-2 text-white-50 hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-opacity-75 focus:ring-white"
         >
           Přihlásit se
         </button>
+
+        <div className="mt-4 text-center text-sm">
+          <a
+            href={route('register')}
+            className="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
+          >
+            Nemáte účet? Zaregistrujte se
+          </a>
+        </div>
       </form>
     </>
   );

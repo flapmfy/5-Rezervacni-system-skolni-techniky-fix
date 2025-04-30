@@ -104,10 +104,12 @@ const Show = ({ equipment, category, bookedRanges, disabledDays }) => {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <div className="flex items-center gap-1 text-nowrap rounded-md bg-gray-200 px-4 py-1 dark:bg-gray-800">
+                {equipment.room && (
+                  <div className="flex items-center gap-1 text-nowrap rounded-md bg-gray-200 px-4 py-1 dark:bg-gray-800">
                   <MapPinIcon className="size-4" />
                   {equipment.room}
                 </div>
+                )}
 
                 <div className="flex items-center gap-1 text-nowrap rounded-md bg-gray-200 px-4 py-1 dark:bg-gray-800">
                   <AcademicCapIcon className="size-4" />

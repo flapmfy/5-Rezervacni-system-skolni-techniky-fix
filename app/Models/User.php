@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
-use LdapRecord\Laravel\Auth\LdapAuthenticatable;
 
-class User extends Authenticatable implements LdapAuthenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use AuthenticatesWithLdap, Notifiable, HasFactory;
+    use Notifiable, HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -21,16 +21,17 @@ class User extends Authenticatable implements LdapAuthenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'username',
         'email',
         'password',
         'first_name',
         'last_name',
         'class',
-        'is_admin',
+        'role',
         'default_room',
         'disabled_days',
+        'email_verified_at',
+        'approved_at',
     ];
 
     /**
@@ -40,6 +41,7 @@ class User extends Authenticatable implements LdapAuthenticatable
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -51,13 +53,24 @@ class User extends Authenticatable implements LdapAuthenticatable
     {
         return [
             'password' => 'hashed',
-            'is_admin' => 'boolean',
+            'email_verified_at' => 'datetime',
+            'approved_at' => 'datetime',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function needsProfileCompletion(): bool
     {
         return empty($this->first_name) || empty($this->last_name);
+    }
+
+    public function isApproved(): bool
+    {
+        return !is_null($this->approved_at);
     }
 
     // Existing relationship methods...
@@ -83,5 +96,9 @@ class User extends Authenticatable implements LdapAuthenticatable
             Equipment::class
         )->withTrashedParents();
     }
-}
 
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+}

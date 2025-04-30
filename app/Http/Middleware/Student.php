@@ -21,7 +21,7 @@ class Student
             return to_route('login');
         }
 
-        if (! Auth::user()->is_admin) {
+        if (! Auth::user()->isAdmin()) {
             return $next($request);
         }
 

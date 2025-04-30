@@ -25,10 +25,6 @@ class LoginController extends Controller
             'password.required' => 'Zadejte heslo',
         ]);
 
-        $credentials = [
-            'cn' => $request->username,
-            'password' => $request->password,
-        ];
         $key = 'login:'.$request->username.$request->ip();
 
         // Check if rate limit is exceeded
@@ -37,17 +33,18 @@ class LoginController extends Controller
         }
 
         // Attempt login
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+            $user = Auth::user();
+            
             RateLimiter::clear($key); // Clear rate limit on successful login
             $request->session()->regenerate();
-            $user = Auth::user();
 
-             // Check if profile needs completion
+            // Check if profile needs completion
             if ($user->needsProfileCompletion()) {
                 return redirect()->route('profile.complete');
             }
 
-            if ($user->is_admin) {
+            if ($user->isAdmin()) {
                 return redirect()->intended(route('admin.dashboard'));
             }
 

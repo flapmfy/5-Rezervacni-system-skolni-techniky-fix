@@ -1,0 +1,126 @@
+# Builder stage
+FROM php:8.3-fpm AS builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    zip \
+    unzip \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libzip-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev \
+    libonig-dev \
+    supervisor \
+    nodejs \
+    npm \
+    libldap2-dev \
+    libldap-common \
+    libwebp-dev
+
+# Configure and install LDAP extension
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install ldap
+
+# Configure and install GD extension
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd
+
+# Install basic extensions
+RUN docker-php-ext-install pdo pdo_mysql zip
+
+# Install commonly bundled extensions
+RUN docker-php-ext-install \
+    bcmath \
+    ctype \
+    fileinfo \
+    pcntl \
+    xml
+
+# Enable these extensions through php.ini if needed
+RUN docker-php-ext-enable opcache
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+COPY . .
+
+# Install dependencies and build assets
+RUN composer install --no-dev --optimize-autoloader \
+    && npm ci \
+    && npm run build \
+    && chmod -R 775 public/build \
+    && rm -rf node_modules
+
+# Production stage
+FROM php:8.3-fpm
+
+# Install system dependencies (same as builder)
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libzip-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev \
+    libonig-dev \
+    supervisor \
+    libldap2-dev \
+    libldap-common \
+    libwebp-dev \
+    cron
+
+# Configure and install LDAP extension
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install ldap
+
+# Configure and install GD extension
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd
+
+# Install basic extensions
+RUN docker-php-ext-install pdo pdo_mysql zip
+
+# Install commonly bundled extensions
+RUN docker-php-ext-install \
+    bcmath \
+    ctype \
+    fileinfo \
+    pcntl \
+    xml
+
+# Enable these extensions through php.ini if needed
+RUN docker-php-ext-enable opcache
+
+# Clean up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy application from builder
+COPY --from=builder /var/www/html /var/www/html
+
+# Supervisor configuration
+COPY docker/supervisor/prod.conf /etc/supervisor/conf.d/laravel.conf
+
+# Setup cron for Laravel scheduler
+RUN mkdir -p /etc/cron.d
+RUN echo "* * * * * cd /var/www/html && php artisan schedule:run >> /var/www/html/storage/logs/scheduler.log 2>&1" > /etc/cron.d/scheduler \
+    && chmod 0644 /etc/cron.d/scheduler \
+    && crontab /etc/cron.d/scheduler
+
+# Setup permissions and directories
+WORKDIR /var/www/html
+
+# Make sure the volume mount point has correct ownership
+RUN chown -R www-data:www-data /var/www/html
+
+# Entrypoint will handle permissions and startup
+COPY docker-entrypoint-prod.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-prod.sh
+
+ENTRYPOINT ["docker-entrypoint-prod.sh"]

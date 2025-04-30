@@ -1,0 +1,15 @@
+Uživatel:
+Potvrzení o přijetí rezervace (done)
+Potvrzení o schválení rezervace (done) 
+Potvrzení o neschválení rezervace (done)
+(možná) Upozornění o předčasné terminaci rezervace
+(možná) Upozornění o převzetí den předem 
+Upozornění o nevyzvednutí 
+(možná) Upozornění o vrácení den předem
+Upozornění o nevrácení
+
+Admin:
+Upozornění o neschválených rezervací
+Upozornění o zrušení rezervace (done)
+Upozornění o nevyzvednutí vybavení
+Upozornění o nevrácení vybavení

@@ -1,6 +1,6 @@
 # Rezervační systém pro zápůjčku školní techniky
 
-Tato webová aplikace nabízí studentům VOŠ a SPŠE Plzeň přehled o nabízeném školním vybavení k vypůjčení, které si mohou pro sebe na specifikované časové období rezervovat.
+Tato nevim webová aplikace nabízí studentům VOŠ a SPŠE Plzeň přehled o nabízeném školním vybavení k vypůjčení, které si mohou pro sebe na specifikované časové období rezervovat.
 
 Pro administrátory vybavení se jedná o řešení nabízející přehled o právě probíhajících či proběhlých výpůjčkách, možnost přidat či odebrat zařízení a rozhodnout, zda schválí či odmítnou rezervaci na základě historie výpůjček daného studenta.
 

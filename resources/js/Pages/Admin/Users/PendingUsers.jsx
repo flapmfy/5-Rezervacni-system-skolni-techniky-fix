@@ -62,7 +62,6 @@ const PendingUsers = ({ pendingUsers, filters }) => {
       {},
       {
         preserveState: true,
-        replace: true,
         preserveScroll: true,
       }
     );
@@ -78,7 +77,6 @@ const PendingUsers = ({ pendingUsers, filters }) => {
       {},
       {
         preserveState: true,
-        replace: true,
         preserveScroll: true,
       }
     );

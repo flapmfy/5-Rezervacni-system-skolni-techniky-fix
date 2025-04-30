@@ -70,44 +70,6 @@ services:
     networks:
       - laravel
 
-  openldap:
-    image: osixia/openldap:latest
-    container_name: openldap
-    hostname: openldap
-    ports:
-      - '389:389'
-    volumes:
-      - ./openldap-data/slapd/database:/var/lib/ldap
-      - ./openldap-data/slapd/config:/etc/ldap/slapd.d
-    environment:
-      - LDAP_ORGANISATION=SPSE
-      - LDAP_DOMAIN=spse.local
-      - LDAP_BASE_DN=dc=spse,dc=local
-      - LDAP_ADMIN_USERNAME=admin
-      - LDAP_ADMIN_PASSWORD=admin
-      - LDAP_CONFIG_PASSWORD=config_pass
-      - LDAP_READONLY_USER=true
-      - LDAP_READONLY_USER_USERNAME=user-ro
-      - LDAP_READONLY_USER_PASSWORD=ro_pass
-    networks:
-      - openldap
-      - laravel
-
-  phpldapadmin:
-    image: osixia/phpldapadmin:latest
-    container_name: phpldapadmin
-    hostname: phpldapadmin
-    ports:
-      - '8081:80'
-    environment:
-      - PHPLDAPADMIN_LDAP_HOSTS=openldap
-      - PHPLDAPADMIN_HTTPS=false
-    depends_on:
-      - openldap
-    networks:
-      - openldap
-      - laravel
-
 networks:
   laravel:
   openldap:

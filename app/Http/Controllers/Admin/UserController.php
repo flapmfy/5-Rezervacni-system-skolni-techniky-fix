@@ -48,9 +48,11 @@ class UserController extends Controller
     public function approve($id)
     {
         $user = User::findOrFail($id);
+
         if ($user->approved_at) {
             return back()->with('flash', flash('error', 'Uživatel již byl schválen.'));
         }
+
         $user->approved_at = now();
         $user->save();
         

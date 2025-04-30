@@ -38,8 +38,7 @@ class AccountApproved extends Notification implements ShouldQueue
             ->subject('Váš účet byl schválen')
             ->line('Váš účet byl schválen administrátorem.')
             ->line('Nyní se můžete přihlásit do systému.')
-            ->action('Přihlásit se', url(route('login')))
-            ->line('Děkujeme za vaši registraci!');
+            ->action('Přihlásit se', url(route('login')));
     }
 
     /**

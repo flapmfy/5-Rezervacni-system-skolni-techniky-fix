@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\Admin;
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegistrationController;
-use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\User;
-use App\Http\Middleware\Admin as AdminMiddleware;
-use App\Http\Middleware\Authenticated;
-use App\Http\Middleware\EnsureAccountIsApproved;
-use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\Guest;
+use App\Http\Controllers\Admin;
 use App\Http\Middleware\Student;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\Authenticated;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\EnsureEmailIsVerified;
+use App\Http\Middleware\EnsureAccountIsApproved;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Middleware\Admin as AdminMiddleware;
+use App\Http\Controllers\Auth\RegistrationController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Auth\PasswordResetController;
 
 // ------------------------------ Nepřihlášení ------------------------------
 Route::middleware([Guest::class])->group(function () {
@@ -23,6 +24,22 @@ Route::middleware([Guest::class])->group(function () {
     // Registrace
     Route::get('/register', [RegistrationController::class, 'index'])->name('register');
     Route::post('/register', [RegistrationController::class, 'register'])->name('register.post');
+
+    // Zobrazení formuláře pro obnovení hesla
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgotForm'])
+    ->name('password.request');
+    
+    // Zpracování žádosti o obnovení hesla
+    Route::post('/forgot-password', [PasswordResetController::class, 'processForgotRequest'])
+        ->name('password.email');
+    
+    // Zobrazení formuláře pro obnovení hesla
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+    
+    // Zpracování obnovení hesla
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
+        ->name('password.update');
 });
 
 // ------------------------------ Kdokokliv přihlášený ------------------------------

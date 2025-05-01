@@ -65,7 +65,7 @@ class ReservationsController extends Controller
                     ],
                     'student' => [
                         'name' => $user ? $user->first_name.' '.$user->last_name : 'neexistuje',
-                        'class' => $user ? $user->class : '',
+                        'class' => $user ? $user->default_room : '',
                     ],
                     'start_date' => $reservation->start_date,
                     'end_date' => $reservation->end_date,
@@ -187,7 +187,7 @@ class ReservationsController extends Controller
             'reservation' => $reservation,
             'student' => [
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
-                'class' => $reservationUser ? $reservationUser->class : '',
+                'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
                 'past_reservations_managed' => $adminManagedPast,
                 'past_reservations_other' => $nonAdminManagedPast,
@@ -230,7 +230,7 @@ class ReservationsController extends Controller
             'reservation' => $reservation,
             'student' => [
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
-                'class' => $reservationUser ? $reservationUser->class : '',
+                'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
         ]);
@@ -272,7 +272,7 @@ class ReservationsController extends Controller
             'reservation' => $reservation,
             'student' => [
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
-                'class' => $reservationUser ? $reservationUser->class : '',
+                'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
         ]);
@@ -314,7 +314,7 @@ class ReservationsController extends Controller
             'reservation_issues' => checkReservationIssues($reservation),
             'student' => [
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
-                'class' => $reservationUser ? $reservationUser->class : '',
+                'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
             ],
         ]);
@@ -432,7 +432,7 @@ class ReservationsController extends Controller
                     'status' => $reservation->status,
                     'equipment_name' => $reservation->equipment->name,
                     'user_name' => $reservation->user->first_name.' '.$reservation->user->last_name,
-                    'user_class' => $reservation->user->class,
+                    'user_class' => $reservation->user->default_room,
                 ];
             });
 

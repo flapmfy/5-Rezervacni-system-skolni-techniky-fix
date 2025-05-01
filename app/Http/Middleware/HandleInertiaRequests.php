@@ -75,7 +75,7 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => [
                     'name' => $user->first_name.' '.$user->last_name,
-                    'class' => $user->class,
+                    'class' => $user->default_room,
                     'isAdmin' => $user->isAdmin(),
                 ],
             ],

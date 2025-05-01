@@ -14,10 +14,10 @@ class CheckBanned
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && auth()->user()->is_banned) {
-          $banReason = auth()->user()->ban_reason;
+            $banReason = auth()->user()->ban_reason;
             auth()->logout();
-            
-            return to_route('login')->with('flash', flash('error', 'Váš účet byl zabanován. Důvod: ' . $banReason));
+
+            return to_route('login')->with('flash', flash('error', 'Váš účet byl zabanován. Důvod: '.$banReason));
         }
 
         return $next($request);

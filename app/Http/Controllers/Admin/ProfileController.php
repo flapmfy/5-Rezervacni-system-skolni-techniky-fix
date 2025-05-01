@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
@@ -64,7 +64,7 @@ class ProfileController extends Controller
         return back()->with('flash', flash('success', 'Nastavení bylo aktualizováno'));
     }
 
-        public function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'current_password' => 'required|current_password',
@@ -75,11 +75,11 @@ class ProfileController extends Controller
             'password.min' => 'Heslo musí mít alespoň 8 znaků.',
             'password.confirmed' => 'Hesla se neshodují.',
         ]);
-        
+
         $user = Auth::user();
         $user->password = Hash::make($request->password);
         $user->save();
-        
+
         return back()->with('flash', flash('success', 'Heslo bylo úspěšně změněno.'));
     }
 }

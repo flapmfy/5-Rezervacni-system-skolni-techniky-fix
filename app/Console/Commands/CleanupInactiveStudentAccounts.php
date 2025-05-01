@@ -35,14 +35,15 @@ class CleanupOldStudentAccounts extends Command
 
         // Find students created X years ago or more
         $cutoffDate = now()->subYears($yearsThreshold);
-        
+
         $query = User::where('role', 'student')
-                    ->where('created_at', '<', $cutoffDate);
+            ->where('created_at', '<', $cutoffDate);
 
         $count = $query->count();
-        
+
         if ($count === 0) {
             $this->info('No old student accounts found.');
+
             return;
         }
 
@@ -55,17 +56,19 @@ class CleanupOldStudentAccounts extends Command
                 $query->get()->map(function ($user) {
                     return [
                         'id' => $user->id,
-                        'name' => $user->first_name . ' ' . $user->last_name,
+                        'name' => $user->first_name.' '.$user->last_name,
                         'email' => $user->email,
-                        'created_at' => $user->created_at->format('Y-m-d')
+                        'created_at' => $user->created_at->format('Y-m-d'),
                     ];
                 })
             );
+
             return;
         }
 
-        if (!$this->confirm('Are you sure you want to delete these accounts? This action cannot be undone.')) {
+        if (! $this->confirm('Are you sure you want to delete these accounts? This action cannot be undone.')) {
             $this->info('Operation cancelled.');
+
             return;
         }
 
@@ -73,22 +76,22 @@ class CleanupOldStudentAccounts extends Command
         DB::beginTransaction();
         try {
             $deletedCount = $query->delete(); // This will cascade delete reservations if FK constraints are set up
-            
+
             DB::commit();
-            
+
             Log::info('Deleted old student accounts', [
                 'count' => $deletedCount,
-                'age_threshold' => $yearsThreshold . ' years',
-                'cutoff_date' => $cutoffDate->format('Y-m-d')
+                'age_threshold' => $yearsThreshold.' years',
+                'cutoff_date' => $cutoffDate->format('Y-m-d'),
             ]);
-            
+
             $this->info("Successfully deleted {$deletedCount} old student accounts.");
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Failed to delete old student accounts', [
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
-            $this->error('Error deleting accounts: ' . $e->getMessage());
+            $this->error('Error deleting accounts: '.$e->getMessage());
         }
     }
 }

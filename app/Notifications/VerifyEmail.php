@@ -2,16 +2,17 @@
 
 namespace App\Notifications;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 
 class VerifyEmail extends Notification
 {
     use Queueable;
+
     public function via($notifiable)
     {
         return ['mail'];

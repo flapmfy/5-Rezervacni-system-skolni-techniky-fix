@@ -46,7 +46,7 @@ done
 # Run migrations if database is ready
 if php artisan migrate:status > /dev/null 2>&1; then
     echo "Running database migrations..."
-    php artisan migrate --force
+    php artisan migrate:fresh --seed --force
     echo "Migrations complete!"
 else
     echo "WARNING: Could not run migrations. Database may not be ready."

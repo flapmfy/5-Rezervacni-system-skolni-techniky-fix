@@ -114,49 +114,16 @@ docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate:fresh --seed
 ```
 
-### Konfigurace LDAP
+### Dostupný uživatel
+Při prvontím spuštění aplikace je k disozici defaultně uživatel typu admin, jehož heslo je nutné po prvním přihlášení změnit.
 
-Pro lokální vývoj je vytvořen ldap, který je spravován pomocí phpldapadmin a snaží se kopírovat strukturu toho školního.
+Přihlašovací jméno: wachtl
 
-#### Přihlášení do phpLDAPadmin:
-
-- URL: http://localhost:8081
-
-- Login DN: cn=admin,dc=spse,dc=local
-
-- Heslo: admin
-
-#### Import dat:
-
-V phpLDAPadmin klikněte na tlačítko import a vložte zde zkopírovaný obsah souboru `/openldap/ldif/01-testdata.ldif`
-
-#### Dostupní uživatelé
-
-Nyný se můžeze přihlásit do aplikace pomocí následujících účtů:
-
-```
-Student1:
-  Uživatelské jméno: student1
-  Heslo: password
-
-Student2:
-  Uživatelské jméno: student2
-  Heslo: password
-
-Učitel1:
-  Uživatelské jméno: teacher1
-  Heslo: password
-
-Učitel2:
-  Uživatelské jméno: teacher2
-  Heslo: password
-```
+Heslo: heslo
 
 ### Přístup ke stránce
 
 Stránka je přístupná na: http://localhost:8000
-
-Správa ldapu: http://localhost:8081
 
 Pro debugování: http://localhost:8000/telescope
 
@@ -210,7 +177,7 @@ docker-compose exec app php artisan schedule:work
 
 ## Nasazení na server
 
-Nasazení aplikace by mělo být provedeno na server s OS Linux. Základním předpokladem je stažený a nakonfigurovaný git (je ukázáno v kapitole o lokálním vývoji.)
+Nasazení aplikace by mělo být provedeno na server s OS Linux. Základním předpokladem je stažený a nakonfigurovaný git (je ukázáno v kapitole o lokálním vývoji). Vedle toho je nutný docker compose.
 
 ### Stažení repozitáře
 

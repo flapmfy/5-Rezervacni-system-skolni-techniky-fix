@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import GenericLink from '@/Components/Navigation/GenericLink';
 import { useRoute } from 'ziggy-js';
 

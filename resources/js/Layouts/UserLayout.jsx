@@ -11,6 +11,7 @@ import {
   HomeIcon,
   RectangleStackIcon,
   ArrowLeftEndOnRectangleIcon,
+  UserIcon,
 } from '@heroicons/react/24/outline';
 
 const BaseLayout = ({ children }) => {
@@ -86,10 +87,15 @@ const BaseLayout = ({ children }) => {
             <ul className="flex flex-col gap-3 md:flex-row md:items-start md:gap-4">
               <li>
                 <DropdownMenu title={`${auth.user.name}, ${auth.user.class}`}>
+                  <NavLink href={'profile'}>
+                    <UserIcon className="w-6" />
+                    <span>Profil</span>
+                  </NavLink>
                   <NavLink href={'auth.logout'}>
                     <ArrowLeftEndOnRectangleIcon className="w-6" />
                     <span>Odhlásit se</span>
                   </NavLink>
+                  
                 </DropdownMenu>
               </li>
             </ul>

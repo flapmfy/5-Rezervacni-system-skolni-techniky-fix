@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\EnsureAccountIsApproved;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\User\ProfileController as UserProfileController;
 use App\Http\Middleware\Admin as AdminMiddleware;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -86,6 +87,15 @@ Route::middleware([Student::class, EnsureEmailIsVerified::class, EnsureAccountIs
 
     // Vytvoření rezervace
     Route::post('/rezervace', [User\ReservationsController::class, 'store'])->name('user.reservations.store');
+
+    // Zobrazení profilu
+    Route::get('/profil', [UserProfileController::class, 'index'])->name('profile');
+
+    // Změna hesla
+    Route::post('/profil/zmena-hesla', [UserProfileController::class, 'updatePassword'])->name('profile.password.update');
+
+    // Aktualizace profilu
+    Route::patch('/profil', [\App\Http\Controllers\User\ProfileController::class, 'update'])->name('profile.update');
 
     // Návod k použití
     Route::inertia('/navod-k-pouziti', 'Student/Manual')->name('user.manual');

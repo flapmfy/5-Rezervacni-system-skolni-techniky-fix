@@ -174,7 +174,7 @@ class EquipmentController extends Controller
             $equipment->image_path = Storage::url($equipment->image_path);
         }
 
-        $equipment_reservations = $equipment->reservations()->with(['user:id,name'])->select(['id', 'user_id', 'status', 'start_date', 'end_date'])->get();
+        $equipment_reservations = $equipment->reservations()->with(['user:id,username'])->select(['id', 'user_id', 'status', 'start_date', 'end_date'])->get();
 
         return Inertia::render('Admin/Equipment/Edit', [
             'equipment' => $equipment,

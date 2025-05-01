@@ -4,7 +4,7 @@ import { useRoute } from 'ziggy-js';
 import { Head, useForm } from '@inertiajs/react';
 import { EnvelopeIcon } from '@heroicons/react/24/outline';
 
-const VerifyEmail = () => {
+const VerifyEmail = ({ email }) => {
   const route = useRoute();
   const { post, processing } = useForm();
 
@@ -18,14 +18,15 @@ const VerifyEmail = () => {
       <Head title="Ověření emailu" />
       <div className="drop-down w-full max-w-md rounded-lg bg-white-50 p-6 shadow-md dark:bg-gray-800">
         <div className="mb-8 flex flex-col items-center gap-1 text-2xl font-bold text-gray-800 dark:text-gray-200">
-          <Logo className="size-12" />
+
+            <Logo className="size-16" />
+
           <p>Ověření emailu</p>
         </div>
 
         <div className="mb-6 text-center">
-          <EnvelopeIcon className="mx-auto mb-4 h-12 w-12 text-green-500" />
           <p className="text-gray-700 dark:text-gray-300">
-            Na váš email byl odeslán ověřovací odkaz. Prosím klikněte na něj pro
+            Na váš email ({email}) byl odeslán ověřovací odkaz. Prosím klikněte na něj pro
             dokončení registrace.
           </p>
           <p className="mt-2 text-gray-700 dark:text-gray-300">

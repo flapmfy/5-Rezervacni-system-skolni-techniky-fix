@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { useRoute } from 'ziggy-js';
 import Breadcrumbs from '@/Components/Navigation/AdminBreadcrumbs';
@@ -99,9 +99,9 @@ const ShowActive = ({ reservation, student }) => {
           {/* informace o žákovi  */}
           <InfoCard title="Žák">
             <InfoItem icon={UserIcon} label="Jméno">
-              <span>
+              <Link href={route('admin.users.show', student.id)} className="text-green-600 underline">
                 {student.name}, {student.class}
-              </span>
+              </Link>
             </InfoItem>
 
             <InfoItem icon={AtSymbolIcon} label="Email">

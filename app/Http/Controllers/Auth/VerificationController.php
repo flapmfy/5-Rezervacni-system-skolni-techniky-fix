@@ -12,7 +12,10 @@ class VerificationController extends Controller
 {
     public function notice()
     {
-        return Inertia::render('Auth/VerifyEmail');
+        $email = auth()->user()->email;
+        return Inertia::render('Auth/VerifyEmail', [
+            'email' => $email,
+        ]);
     }
 
 public function verify(EmailVerificationRequest $request)

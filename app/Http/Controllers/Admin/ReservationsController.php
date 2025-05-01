@@ -186,6 +186,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Waiting/Show', [
             'reservation' => $reservation,
             'student' => [
+                'id' => $reservationUser ? $reservationUser->id : '',
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
@@ -229,6 +230,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Accepted/Show', [
             'reservation' => $reservation,
             'student' => [
+                'id' => $reservationUser ? $reservationUser->id : '',
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
@@ -271,6 +273,7 @@ class ReservationsController extends Controller
         return Inertia::render('Admin/Reservations/Active/Show', [
             'reservation' => $reservation,
             'student' => [
+                'id' => $reservationUser ? $reservationUser->id : '',
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',
@@ -313,6 +316,7 @@ class ReservationsController extends Controller
             'reservation' => $reservation,
             'reservation_issues' => checkReservationIssues($reservation),
             'student' => [
+                'id' => $reservationUser ? $reservationUser->id : '',
                 'name' => $reservationUser ? $reservationUser->first_name.' '.$reservationUser->last_name : 'Uživatel neexistuje',
                 'class' => $reservationUser ? $reservationUser->default_room : '',
                 'email' => $reservationUser ? $reservationUser->email : '',

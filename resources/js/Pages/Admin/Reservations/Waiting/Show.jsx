@@ -112,9 +112,9 @@ const ShowWaiting = ({ reservation, student }) => {
           {/* informace o žákovi  */}
           <InfoCard title="Žák">
             <InfoItem icon={UserIcon} label="Jméno">
-              <span>
+              <Link href={route('admin.users.show', student.id)} className="text-green-600 underline">
                 {student.name}, {student.class}
-              </span>
+              </Link>
             </InfoItem>
 
             <InfoItem icon={AtSymbolIcon} label="Email">

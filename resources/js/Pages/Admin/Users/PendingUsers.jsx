@@ -128,7 +128,7 @@ const PendingUsers = ({ pendingUsers, filters }) => {
           </button>
         </div>
 
-        {/* vypis rezervaci */}
+        {/* vypis uzivatelu */}
         {!pendingUsers.data.length ? (
           <NoResults message="Nikdo zde není" />
         ) : (
@@ -139,6 +139,7 @@ const PendingUsers = ({ pendingUsers, filters }) => {
                   <tr>
                     <th className="px-6 py-3">#</th>
                     <th className="px-6 py-3">Jméno a příjmení</th>
+                    <th className="px-6 py-3">Email</th>
                     <th className="px-6 py-3">Třída</th>
                     <th className="px-6 py-3">Role</th>
                     <th className="px-6 py-3">Datum vytvoření</th>
@@ -160,11 +161,16 @@ const PendingUsers = ({ pendingUsers, filters }) => {
                         <td className="max-w-[150px] whitespace-nowrap px-6 py-4 text-sm">
                           {user.first_name} {user.last_name} ({user.username})
                         </td>
+                        <td className="max-w-[150px] whitespace-nowrap px-6 py-4 text-sm">
+                          {user.email}
+                        </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm">
                           {user.default_room}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm">
-                          {user.role}
+                          <span className={`rounded-full text-white-50 px-2 py-1 ${user.role === 'student' ? 'bg-green-600' : 'bg-yellow-500'}`}>
+                            {user.role}
+                          </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm">
                           {format( user.created_at, 'dd.MM.yyyy')}

@@ -117,7 +117,7 @@ const AdminPanelLayout = ({ children }) => {
       {
         type: 'link',
         label: 'Přehled',
-        href: 'admin.users.pending',
+        href: 'admin.users',
         icon: UserIcon,
         id: 'users-link',
       },

@@ -6,15 +6,17 @@ use App\Http\Controllers\Admin;
 use App\Http\Middleware\Student;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Authenticated;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\EnsureEmailIsVerified;
 use App\Http\Middleware\EnsureAccountIsApproved;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\User\ProfileController as UserProfileController;
 use App\Http\Middleware\Admin as AdminMiddleware;
 use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\User\ProfileController as UserProfileController;
+use App\Http\Middleware\CheckBanned;
 
 // ------------------------------ Nepřihlášení ------------------------------
 Route::middleware([Guest::class])->group(function () {
@@ -63,7 +65,7 @@ Route::middleware([Authenticated::class])->group(function () {
 });
 
 // ------------------------------ Uživatelská část ------------------------------
-Route::middleware([Student::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class])->group(function () {
+Route::middleware([Student::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class, CheckBanned::class])->group(function () {
     // Domovská obrazovka uživatele
     Route::get('/', [User\ReservationsController::class, 'active'])->name('user.reservations.active');
 
@@ -102,7 +104,7 @@ Route::middleware([Student::class, EnsureEmailIsVerified::class, EnsureAccountIs
 });
 
 // ------------------------------ Administrátorská část ------------------------------
-Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class])->group(function () {
+Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureAccountIsApproved::class, CheckBanned::class])->group(function () {
     // Domovská obrazovka admina
     Route::get('/admin', [Admin\DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -126,14 +128,23 @@ Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureA
     )->name('admin.manual');
 
     // ------------------------ Uživatelé ------------------------
-    Route::get('/admin/uzivatele/cekajici', [App\Http\Controllers\Admin\UserController::class, 'usersPending'])
+    Route::get('/admin/uzivatele/cekajici', [UserController::class, 'usersPending'])
         ->name('admin.users.pending');
 
-    Route::post('/admin/uzivatele/{id}/schvalit', [App\Http\Controllers\Admin\UserController::class, 'approve'])
+    Route::post('/admin/uzivatele/{id}/schvalit', [UserController::class, 'approve'])
         ->name('admin.users.approve');
 
-    Route::post('/admin/uzivatele/{id}/odmitnout', [App\Http\Controllers\Admin\UserController::class, 'decline'])
+    Route::post('/admin/uzivatele/{id}/odmitnout', [UserController::class, 'decline'])
         ->name('admin.users.decline');
+
+    Route::get('/admin/uzivatele', [UserController::class, 'index'])
+        ->name('admin.users');
+
+    Route::post('/admin/uzivatele/{id}/ban', [UserController::class, 'ban'])->name('admin.users.ban');
+
+    Route::post('/admin/uzivatele/{id}/unban', [UserController::class, 'unban'])->name('admin.users.unban');
+
+    Route::get('/admin/uzivatele/{id}', [UserController::class, 'show'])->name('admin.users.show');
 
     // ------------------------ Rezervace ------------------------
     // --- Neschválené žádosti --- //

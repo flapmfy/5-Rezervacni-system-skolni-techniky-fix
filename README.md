@@ -111,7 +111,7 @@ docker-compose up -d --build
 
 # Setup
 docker-compose exec app php artisan key:generate
-docker-compose exec app php artisan migrate:fresh
+docker-compose exec app php artisan migrate:fresh --seed
 ```
 
 ### Konfigurace LDAP

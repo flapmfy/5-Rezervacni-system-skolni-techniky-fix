@@ -47,7 +47,7 @@ Route::middleware([Guest::class])->group(function () {
 
 // ------------------------------ Kdokokliv přihlášený ------------------------------
 Route::middleware([Authenticated::class])->group(function () {
-    Route::get('/awaiting-approval', [VerificationController::class, 'awaitingApproval'])
+    Route::get('/ceka-na-schvaleni', [VerificationController::class, 'awaitingApproval'])
         ->name('awaiting-approval');
 
     Route::get('/email/overeni', [VerificationController::class, 'notice'])

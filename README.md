@@ -209,6 +209,9 @@ sudo ./fix-permissions-prod.sh
 # Sestavení Docker obrazů
 docker compose -f docker-compose.prod.yml build
 docker compose -f docker-compose.prod.yml up -d
+
+# Kdyby nevyšlo nahrání migrací do databáze
+docker compose -f docker-compose.prod.yml exec app php artisan migrate:fresh --seed
 ```
 
 To je vše. Celý setup automaticky generuje klíč aplikace, instaluje potřebné závislosti pro produkci, optimalizuje celý build. Kromě toho automaticky spouští na pozadí cron, který provádí automatické plánované akce. Supervisor se stará o automatické obnovení fronty v případě jejího pádu.

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->index()->onDelete('cascade');
             $table->foreignId('equipment_id')
                 ->constrained()
                 ->onDelete('restrict')

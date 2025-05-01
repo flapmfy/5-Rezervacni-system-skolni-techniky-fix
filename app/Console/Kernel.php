@@ -25,5 +25,16 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('telescope:prune')
             ->dailyAt('00:01');
+
+            $schedule->command('app:cleanup-inactive-students')
+                 ->monthlyOn(1, '1:00')
+                 ->appendOutputTo(storage_path('logs/cleanup-inactive-students.log'));
+    }
+
+    protected function commands(): void
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
     }
 }

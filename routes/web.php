@@ -117,6 +117,7 @@ Route::middleware([AdminMiddleware::class, EnsureEmailIsVerified::class, EnsureA
     // Profil
     Route::get('/admin/profil', [ProfileController::class, 'index'])->name('admin.profile');
     Route::patch('/admin/profil', [ProfileController::class, 'update'])->name('admin.profile.update');
+    Route::post('/admin/profil', [ProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
     // Manuál k použití
     Route::inertia(

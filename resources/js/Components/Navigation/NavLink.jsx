@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { useRoute } from 'ziggy-js';
 
-const NavLink = ({ href, otherHrefs, children, classes, prefetch = true }) => {
+const NavLink = ({ href, otherHrefs, children, classes, prefetch = false }) => {
   const route = useRoute();
   const isActive = route().current(href) || otherHrefs?.some((href) => route().current(href));
 
